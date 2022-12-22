@@ -10,9 +10,9 @@ object FinagleDemo {
   def stringLengthService = new Service[Request, Response]:
     override def apply(request: Request): Future[Response] =
       Future {
-        val input = request.getParam("name")
+        val result = Option(request.getParam("name")).map(_.length).getOrElse(-1)
         val response = Response(status = Status.Ok)
-        response.setContentString(input.length.toString)
+        response.setContentString(result.toString)
         response
       }
 
