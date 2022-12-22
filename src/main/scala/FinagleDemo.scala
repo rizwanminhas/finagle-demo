@@ -1,5 +1,5 @@
 import com.twitter.finagle.{Http, ListeningServer, Service}
-import com.twitter.finagle.http.{Request, Response, Status}
+import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.{Await, Future}
 
 object FinagleDemo {
@@ -18,4 +18,13 @@ object FinagleDemo {
 
   def simpleHttpServer: ListeningServer =
     Http.serve(":9090", stringLengthService)
+}
+
+object SimpleClient {
+  def main(args: Array[String]): Unit =
+    val client: Service[Request, Response] = Http.newService("localhost:9090")
+    val request = Request(Method.Get, "/?name=rizwan")
+    val response: Future[Response] = client(request)
+    response.foreach(resp => println(resp.getContentString()))
+    Thread.sleep(1000)
 }
